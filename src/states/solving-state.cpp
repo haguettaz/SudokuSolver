@@ -106,7 +106,7 @@ void SolvingState::handleInput(sf::Event *event, State *state)
 
         if (event->key.code == sf::Keyboard::Return) _stepByStep = false;
 
-        if (event->key.code == sf::Keyboard::Right && _stepByStep) 
+        if (event->key.code == sf::Keyboard::Space && _stepByStep) 
         {
             if (_solved) return;
             updateSolver();
@@ -134,19 +134,16 @@ void SolvingState::update(State *state)
         }
     }
 
-    if (_solved) return;
+    if (_solved || _error) return;
     if (!_stepByStep)
     {
         _clock.restart();
         while (true)
         {
-            updateSolver();
-            if (stopSolver()) break;
+            if (!updateSolver()) break;
         }
-        std::cout << "Solving time: " << _clock.getElapsedTime().asMilliseconds() << "ms" << std::endl;
+        if (_solved) std::cout << "Solving time: " << _clock.getElapsedTime().asMilliseconds() << "ms" << std::endl;
     }
-
-    // _visibleTextManager.updateAll();
 }
 
 void SolvingState::draw(sf::RenderWindow *window)
@@ -186,7 +183,7 @@ bool SolvingState::stopSolver()
     return false;
 }
 
-void SolvingState::updateSolver()
+bool SolvingState::updateSolver()
 {
     std::bitset<9> msg[9];
 
@@ -244,14 +241,24 @@ void SolvingState::updateSolver()
     }
     // std::cout << "Block backward messages: done!" << std::endl;
 
+    bool change = false;
     for (int i=0; i<9; i++)
     {
         for (int j=0; j<9; j++)
         {
+            if (_msgf[i][j] != (_msgbr[i][j] & _msgbc[i][j] & _msgbb[i][j])) change = true;
             _msgf[i][j] = _msgbr[i][j] & _msgbc[i][j] & _msgbb[i][j];
         }
     }
     std::cout << "Solver iteration: done!" << std::endl;
+
+    if (!change)
+    {
+        _error = true;
+        std::cout << "Sudoku sucks!" << std::endl;
+        return false;
+    }
+    return !stopSolver();
 }
 
 void SolvingState::computeBackwardMsg(std::bitset<9> *msg)

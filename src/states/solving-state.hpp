@@ -20,7 +20,7 @@ public:
     void update(State *state) override;
     void draw(sf::RenderWindow *window) override;
 
-    void updateSolver();
+    bool updateSolver();
     bool stopSolver();
     void computeBackwardMsg(std::bitset<9> *msg);
     bool isInSet(int val, std::bitset<9> set);
@@ -34,6 +34,7 @@ private:
 
     bool _stepByStep;
     bool _solved;
+    bool _error;
 
 
     std::bitset<9> _msgf[9][9];

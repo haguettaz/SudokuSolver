@@ -6,6 +6,7 @@ void SolvingState::init(Grid *grid)
 
     _stepByStep = true;
     _solved = false;
+    _error = false;
 
     if (!_font.loadFromFile("../assets/fonts/iAWriterDuospace-Regular.otf"))
         std::cout << "Error while loading font" << std::endl;

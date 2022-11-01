@@ -56,3 +56,14 @@ build/
 
 # macOS
 .DS_Store
+
+# latex auxiliary files
+*.aux 
+*.fdb_latexmk
+*.fls
+*.synctex.gz
+*.toc
+*.nav
+*.snm
+*.out
+*.log

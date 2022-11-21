@@ -256,7 +256,7 @@ bool SolvingState::updateSolver()
     if (!change)
     {
         _error = true;
-        std::cout << "Sudoku sucks!" << std::endl;
+        std::cout << "Your time to shine..." << std::endl;
         return false;
     }
     return !stopSolver();

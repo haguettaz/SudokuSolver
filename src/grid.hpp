@@ -39,7 +39,6 @@ private:
     sf::Font _font;
 
     sf::Text _cells[9][9];
-
     sf::RectangleShape _blocks[3][3];
     sf::RectangleShape _rows[9];
     sf::RectangleShape _columns[9];

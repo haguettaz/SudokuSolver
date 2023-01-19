@@ -4,20 +4,6 @@ void PlayingState::init(Grid *grid)
 {
     _grid = grid;
 
-    if (!_font.loadFromFile("../assets/fonts/iAWriterDuospace-Regular.otf"))
-        std::cout << "Error while loading font" << std::endl;
-
-    for (int i = 0; i < 9; i++)
-    {
-        for (int j = 0; j < 9; j++)
-        {
-            _cells[i][j].setFont(_font);
-            _cells[i][j].setFillColor(sf::Color::Black);
-            _cells[i][j].setCharacterSize(150);
-            _cells[i][j].setPosition(j*150 + 355, i*150 + 50);
-        }
-    }
-
     _selection.setSize(sf::Vector2f(150, 150));
     _selection.setPosition(sf::Vector2f(150*(_jSelected) + 325, 150 * (_iSelected) + 75));
     _selection.setFillColor(sf::Color::Transparent);
@@ -37,7 +23,6 @@ void PlayingState::handleInput(sf::Event *event, State *state)
 
         if (event->key.code == sf::Keyboard::Escape) _grid->resetAllValues();
 
-        // Load grids from file for demonstration
         if (event->key.code == sf::Keyboard::E) _grid->loadGrid("../assets/grids/easy.txt");
         if (event->key.code == sf::Keyboard::M) _grid->loadGrid("../assets/grids/multiple.txt");
         if (event->key.code == sf::Keyboard::H) _grid->loadGrid("../assets/grids/hard.txt");

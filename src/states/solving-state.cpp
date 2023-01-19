@@ -59,7 +59,6 @@ int SolvingState::getNbSolutions()
 
     while (_solution->prev != NULL)
     {
-        cout << _solution << endl;
         _solution = _solution->prev;
     }
 
@@ -150,11 +149,9 @@ void SolvingState::solve(bitset<9> (&msgf)[9][9])
 
     if (status == 1)
     {
-        cout << "solution found!" << endl;
         addSolution(msgf);
         return;
     }
-
 
     // look for the first ambiguous cell
     int i = 0;

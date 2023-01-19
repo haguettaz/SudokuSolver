@@ -2,8 +2,6 @@
 
 SudokoSolver is a program to play and solve sudokus using an iterative constraint propagation algorithm.
 
-It seems to be able to solve all *normal* sudokus, i.e., sudokus intended to be solved within a reasonable time and without computer help.
-
 ## How to Play?
 
 The program presents two modes: **playing** and **solving**. 

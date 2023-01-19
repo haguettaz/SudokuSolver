@@ -3,7 +3,6 @@
 Sudokus::Sudokus()
 {
     _state = Uninitialized;
-    _prevState = Uninitialized;
 }
 
 void Sudokus::start()
@@ -22,6 +21,7 @@ void Sudokus::start()
     _stateInstances[Playing]->init(&_grid);
 
     _stateInstances[Solving] = new SolvingState();
+    _stateInstances[Solving]->init(&_grid);
 
     _state = Splashscreen;
 
@@ -53,11 +53,6 @@ void Sudokus::gameLoop()
             state->handleInput(&event, &_state);
         }
 
-        if ((_state == Solving) && (_prevState == Playing))
-        {
-            _stateInstances[Solving]->init(&_grid);
-        }
-
         // Update our entities
         state->update(&_state);
 
@@ -65,7 +60,5 @@ void Sudokus::gameLoop()
         state->draw(&_window);
 
         _window.display();
-
-        _prevState = _state;
     }
 }

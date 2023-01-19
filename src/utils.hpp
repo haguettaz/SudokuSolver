@@ -4,11 +4,10 @@
 
 enum State
 {
-    Uninitialized,      // 0
-    Splashscreen,       // 1
-    Playing,               // 2
-    Solving,              // 3
-    Verifying,             // 4
+    Uninitialized,
+    Splashscreen,
+    Playing,
+    Solving,
     Exiting,
 };
 

@@ -24,7 +24,6 @@ public:
 
 private:
     State _state;
-    State _prevState;
 
     Grid _grid;
 

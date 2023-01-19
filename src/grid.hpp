@@ -4,16 +4,20 @@
 #include <SFML/Graphics.hpp>
 #include <fstream>
 
+#include "utils.hpp"
+
+using namespace std;
 class Grid
 {
 public:
     Grid();
     ~Grid(){};
+    void update(State *state);
     void draw(sf::RenderWindow *window);
 
-    int verifyRow(int i);
-    int verifyColumn(int j);
-    int verifyBlock(int i, int j);
+    int checkFixedRow(int i);
+    int checkFixedColumn(int j);
+    int checkFixedBlock(int i, int j);
 
     void loadGrid(std::string filename);
 
@@ -21,18 +25,26 @@ public:
     void setColumnColor(int j, sf::Color color);
     void setBlockColor(int i, int j, sf::Color color);
 
-    int getValue(int i, int j);
-    void setValue(int i, int j, int value);
-    void resetValues();
+    int getFixedValue(int i, int j);
+    int getSolvedValue(int i, int j);
 
-    // void initMsgf();
+    void setFixedValue(int i, int j, int value);
+    void setSolvedValue(int i, int j, int value);
+
+    void resetFixedValues();
+    void resetSolvedValues();
+    void resetAllValues();
+
 private:
-    // sf::Font _font;
-    // sf::Text _cells[9][9];
+    sf::Font _font;
+
+    sf::Text _cells[9][9];
+
     sf::RectangleShape _blocks[3][3];
     sf::RectangleShape _rows[9];
     sf::RectangleShape _columns[9];
 
-    int _values[9][9] = {0};
+    int _fixedValues[9][9] = {0};
+    int _solvedValues[9][9] = {0};
 };
 #endif // SUDOKU_GRID_HPP

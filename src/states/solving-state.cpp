@@ -3,56 +3,7 @@
 void SolvingState::init(Grid *grid)
 {
     _grid = grid;
-    
-    // // init msgf with grid values
-    // for (int i=0; i<9; i++)
-    // {
-    //     for (int j=0; j<9; j++)
-    //     {
-    //         if (_grid->getValue(i,j) == 0) 
-    //         {
-    //             _msgf[i][j].set();
-    //         }
-    //         else
-    //         {
-    //             _msgf[i][j].reset();
-    //             _msgf[i][j].set(_grid->getValue(i,j)-1);
-    //         }
-            
-    //     }
-    // }
-
-    //  << "Solver initialisation: done!" << endl;
 }
-
-// int SolvingState::getRightMostSetBit(bitset<9> bits)
-// {
-//     for (int i=9; i>0; i--)
-//     {
-//         if (bits[i-1] == 1)
-//             return i;
-//     }
-//     return 0;
-// }
-
-
-// string SolvingState::getString(int i, int j)
-// {
-//     if (_msgf[i][j].count() == 1)
-//     {
-//         return to_string(getRightMostSetBit(_msgf[i][j]));
-//     }
-
-//     string str;
-//     for (int k=0; k<9; k++)
-//     {
-//         if (_msgf[i][j][k]) str += to_string(k+1);
-//         else str += " ";
-//         if (k == 2 or k == 5) str += "\n";
-//         else if (k < 8) str += " ";
-//     }
-//     return str;
-// }
 
 void SolvingState::addSolution(bitset<9> (&msgf)[9][9])
 {

@@ -3,7 +3,6 @@
 
 #include <SFML/Graphics.hpp>
 
-// #include "../texts/visible-text-manager.hpp"
 #include "../grid.hpp"
 #include "../utils.hpp"
 

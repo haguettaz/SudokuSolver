@@ -9,7 +9,7 @@ void PlayingState::handleInput(sf::Event *event, State *state)
 {
     if (event->type == sf::Event::KeyPressed)
     {
-        if (event->key.code == sf::Keyboard::Return) 
+        if (event->key.code == sf::Keyboard::Space) 
         {
             *state = Solving;
             _grid->resetSolvedValues();

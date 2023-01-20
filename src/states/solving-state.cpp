@@ -84,7 +84,7 @@ void SolvingState::handleInput(sf::Event *event, State *state)
             cleanSolution();
         }
 
-        if (event->key.code == sf::Keyboard::Return)
+        if (event->key.code == sf::Keyboard::Space)
         {
             _clock.restart();
             bitset<9> msgf[9][9];

@@ -3,12 +3,6 @@
 void PlayingState::init(Grid *grid)
 {
     _grid = grid;
-
-    _selection.setSize(sf::Vector2f(150, 150));
-    _selection.setPosition(sf::Vector2f(150*(_jSelected) + 325, 150 * (_iSelected) + 75));
-    _selection.setFillColor(sf::Color::Transparent);
-    _selection.setOutlineColor(sf::Color::Blue);
-    _selection.setOutlineThickness(10);
 }
 
 void PlayingState::handleInput(sf::Event *event, State *state)
@@ -48,11 +42,10 @@ void PlayingState::handleInput(sf::Event *event, State *state)
 void PlayingState::update(State *state)
 {
     _grid->update(state);
-    _selection.setPosition(sf::Vector2f(150*(_jSelected) + 325, 150 * (_iSelected) + 75));
+    _grid->setCellColor(_iSelected, _jSelected, sf::Color(255, 0, 0, 100));
 }
 
 void PlayingState::draw(sf::RenderWindow *window)
 {
     _grid->draw(window);
-    window->draw(_selection);
 }

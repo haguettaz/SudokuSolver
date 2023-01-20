@@ -23,7 +23,6 @@ private:
 
     Grid *_grid;
 
-    sf::RectangleShape _selection;
     int _iSelected = 4; // corresponds to yPos (rows)
     int _jSelected = 4; // corresponds to xPos (columns)
 };

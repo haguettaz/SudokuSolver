@@ -8,64 +8,49 @@
 
 Grid::Grid() 
 {
-    if (!_font.loadFromFile("../assets/fonts/iAWriterDuospace-Regular.otf"))
+    if (!_font.loadFromFile("../assets/fonts/cmunss.ttf"))
         cout << "Error while loading font" << endl;
 
     for (int i=0; i<9; i++)
     {
-        _rows[i].setSize(sf::Vector2f(1350, 150));
-        _rows[i].setPosition(sf::Vector2f(325, 75 + 150 * i));
-        _rows[i].setFillColor(sf::Color::Transparent);
-        _rows[i].setOutlineColor(sf::Color::Black);
-        _rows[i].setOutlineThickness(3);
-    }
+        for (int j=0; j<9; j++)
+        {
+            _cellsShape[i][j].setSize(sf::Vector2f(100, 100));
+            _cellsShape[i][j].setFillColor(sf::Color::Transparent);
+            _cellsShape[i][j].setOutlineColor(sf::Color::Black);
+            _cellsShape[i][j].setOutlineThickness(3);
+            _cellsShape[i][j].setOrigin(50, 50);
+            _cellsShape[i][j].setPosition(j*100 + 350, i*100 + 350);
 
-    for (int j=0; j<9; j++)
-    {
-        _columns[j].setSize(sf::Vector2f(150, 1350));
-        _columns[j].setPosition(sf::Vector2f(325 + 150*j, 75));
-        _columns[j].setFillColor(sf::Color::Transparent);
-        _columns[j].setOutlineColor(sf::Color::Black);
-        _columns[j].setOutlineThickness(3);
+            _cellsText[i][j].setFont(_font);
+            _cellsText[i][j].setCharacterSize(100);
+        }
     }
 
     for (int i = 0; i < 3; i++)
     {
         for (int j = 0; j < 3; j++)
         {
-            _blocks[i][j].setSize(sf::Vector2f(450, 450));
-            _blocks[i][j].setPosition(sf::Vector2f(450 * j + 325, 450 * i + 75));
-            _blocks[i][j].setFillColor(sf::Color::Transparent);
-            _blocks[i][j].setOutlineColor(sf::Color::Black);
-            _blocks[i][j].setOutlineThickness(5);
+            _blocksShape[i][j].setFillColor(sf::Color::Transparent);
+            _blocksShape[i][j].setOutlineColor(sf::Color::Black);
+            _blocksShape[i][j].setOutlineThickness(5);
+            _blocksShape[i][j].setSize(sf::Vector2f(300, 300));
+            _blocksShape[i][j].setOrigin(150, 150);
+            _blocksShape[i][j].setPosition(sf::Vector2f(300 * j + 450, 300 * i + 450));
         }
     }
 
-    for (int i=0; i<9; i++)
-    {
-        for (int j=0; j<9; j++)
-        {
-            _cells[i][j].setFont(_font);
-            _cells[i][j].setCharacterSize(150);
-            // _cells[i][j].setString(to_string(_grid->getValue(i, j)));
-            _cells[i][j].setPosition(j*150 + 355, i*150 + 50);
-        }
-    }
+    _gridShape.setFillColor(sf::Color::Transparent);
+    _gridShape.setOutlineColor(sf::Color::Black);
+    _gridShape.setOutlineThickness(10);
+    _gridShape.setSize(sf::Vector2f(900, 900));
+    _gridShape.setOrigin(450, 450);
+    _gridShape.setPosition(sf::Vector2f(750, 750));
 }
 
-void Grid::setRowColor(int i, sf::Color color)
+void Grid::setCellColor(int i, int j, sf::Color color)
 {
-    _rows[i].setFillColor(color);
-}
-
-void Grid::setColumnColor(int j, sf::Color color)
-{
-    _columns[j].setFillColor(color);
-}
-
-void Grid::setBlockColor(int i, int j, sf::Color color)
-{
-    _blocks[i][j].setFillColor(color);
+    _cellsShape[i][j].setFillColor(color);
 }
 
 void Grid::setFixedValue(int i, int j, int value)
@@ -107,23 +92,31 @@ void Grid::resetAllValues()
     }
 }
 
-void Grid::loadGrid(std::string filename)
+void Grid::loadGrid(string filename)
 {
-    std::ifstream infile(filename);
-    std::string line, val;
-
-    int *ptr = &_fixedValues[0][0];
-
     resetAllValues();
 
-    while (std::getline(infile, line))
+    ifstream infile(filename);
+
+    if (!infile.is_open())
     {
-        for (std::string::iterator it = line.begin(); it!=line.end(); ++it)
+        cout << "Error while loading grid" << endl;
+        return;
+    }
+
+    char c;
+    for (int i=0; i<9; i++)
+    {
+        for (int j=0; j<9; j++)
         {
-            if (*it == ',') ptr++;
-            else if (std::isdigit(*it)) *ptr = (int) *it - '0';
+            do
+            {
+                infile.get(c);
+            } while (c == ' ' || c == '|' || c == '-' || c == '\n');
+            
+            if (c == '.') continue;
+            _fixedValues[i][j] = (int) c - '0';
         }
-        ptr++;
     }
 }
 
@@ -142,52 +135,6 @@ int Grid::getFixedValue(int i, int j)
     return _fixedValues[i][j];
 }
 
-int Grid::checkFixedRow(int i)
-{
-    for (int sj=0; sj<9; sj++)
-    {
-        if (_fixedValues[i][sj] == 0) continue;
-        for (int tj=sj+1; tj<9; tj++)
-        {
-            if (_fixedValues[i][sj] == _fixedValues[i][tj]) return 0;
-        }
-    }
-    return 1;
-}
-
-int Grid::checkFixedColumn(int j)
-{
-    for (int i=0; i<9; i++)
-    {
-        if (_fixedValues[i][j] == 0) continue;
-        for (int k=i+1; k<9; k++)
-        {
-            if (_fixedValues[i][j] == _fixedValues[k][j]) return 0;
-        }
-    }
-    return 1;
-}
-
-int Grid::checkFixedBlock(int i, int j)
-{
-    for (int k=i*3; k<i*3+3; k++)
-    {
-        for (int l=j*3; l<j*3+3; l++)
-        {
-            if (_fixedValues[k][l] == 0) continue;
-            for (int m=i*3; m<i*3+3; m++)
-            {
-                for (int n=j*3; n<j*3+3; n++)
-                {
-                    if (k*9+l <= m*9+n) continue;
-                    if (_fixedValues[k][l] == _fixedValues[m][n]) return 0;
-                }
-            }
-        }
-    }
-    return 1;
-}
-
 void Grid::update(State *state)
 {
     if (*state == Playing)
@@ -197,40 +144,20 @@ void Grid::update(State *state)
         {
             for (int j=0; j<9; j++)
             {
+                _cellsShape[i][j].setFillColor(sf::Color::Transparent);
                 if (_fixedValues[i][j] > 0) 
                 {
-                    _cells[i][j].setFillColor(sf::Color::Black);
-                    _cells[i][j].setString(to_string(_fixedValues[i][j]));
+                    _cellsText[i][j].setFillColor(sf::Color::Black);
+                    _cellsText[i][j].setString(to_string(_fixedValues[i][j]));
                 }
                 else
                 {
-                    _cells[i][j].setFillColor(sf::Color::Black);
-                    _cells[i][j].setString("");
+                    _cellsText[i][j].setFillColor(sf::Color::Black);
+                    _cellsText[i][j].setString("");
                 }
-            }
-        }
-
-        // check rows and color accordingly
-        for (int i=0; i<9; i++)
-        {
-            if (checkFixedRow(i)) _rows[i].setFillColor(sf::Color::Transparent);
-            else _rows[i].setFillColor(sf::Color(255, 0, 0, 100));
-        }
-
-        // check columns and color accordingly
-        for (int j=0; j<9; j++)
-        {
-            if (checkFixedColumn(j)) _columns[j].setFillColor(sf::Color::Transparent);
-            else _columns[j].setFillColor(sf::Color(255, 0, 0, 100));
-        }
-
-        // check blocks and color accordingly
-        for (int i=0; i<3; i++)
-        {
-            for (int j=0; j<3; j++)
-            {
-                if (checkFixedBlock(i, j)) _blocks[i][j].setFillColor(sf::Color::Transparent);
-                else _blocks[i][j].setFillColor(sf::Color(255, 0, 0, 100));
+                sf::FloatRect cellTextRect = _cellsText[i][j].getLocalBounds();
+                _cellsText[i][j].setOrigin(cellTextRect.left + cellTextRect.width/2, cellTextRect.top + cellTextRect.height/2);
+                _cellsText[i][j].setPosition(_cellsShape[i][j].getPosition());
             }
         }
     }
@@ -240,16 +167,19 @@ void Grid::update(State *state)
         {
             for (int j=0; j<9; j++)
             {
+                _cellsShape[i][j].setFillColor(sf::Color::Transparent);
                 if (_fixedValues[i][j] > 0) 
                 {
-                    _cells[i][j].setFillColor(sf::Color::Black);
-                    _cells[i][j].setString(to_string(_fixedValues[i][j]));
+                    _cellsText[i][j].setFillColor(sf::Color::Black);
+                    _cellsText[i][j].setString(to_string(_fixedValues[i][j]));
                 }
                 else if (_solvedValues[i][j] > 0)
                 {
-                    _cells[i][j].setFillColor(sf::Color::Red);
-                    _cells[i][j].setString(to_string(_solvedValues[i][j]));
+                    _cellsText[i][j].setFillColor(sf::Color::Red);
+                    _cellsText[i][j].setString(to_string(_solvedValues[i][j]));
                 }
+                sf::FloatRect cellTextRect = _cellsText[i][j].getLocalBounds();
+                _cellsText[i][j].setOrigin(cellTextRect.left + cellTextRect.width/2, cellTextRect.top + cellTextRect.height/2);
             }
         }
     }
@@ -257,17 +187,13 @@ void Grid::update(State *state)
 
 void Grid::draw(sf::RenderWindow *window)
 {
-    for (int i=0; i<9; i++)
-    {
-        window->draw(_rows[i]);
-        window->draw(_columns[i]);
-    }
+    window->draw(_gridShape);
 
     for (int i = 0; i < 3; i++)
     {
         for (int j = 0; j < 3; j++)
         {
-            window->draw(_blocks[i][j]);
+            window->draw(_blocksShape[i][j]);
         }
     }
 
@@ -275,7 +201,8 @@ void Grid::draw(sf::RenderWindow *window)
     {
         for (int j=0; j<9; j++)
         {
-            window->draw(_cells[i][j]);
+            window->draw(_cellsShape[i][j]);
+            window->draw(_cellsText[i][j]);
         }
     }
 }

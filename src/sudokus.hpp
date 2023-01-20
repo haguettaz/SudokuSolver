@@ -15,7 +15,7 @@
 class Sudokus
 {
 public:
-    int SCREEN_WIDTH = 2000;
+    int SCREEN_WIDTH = 1500;
     int SCREEN_HEIGHT = 1500;
 
     Sudokus();

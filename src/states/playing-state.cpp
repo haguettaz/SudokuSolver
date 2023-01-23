@@ -17,9 +17,9 @@ void PlayingState::handleInput(sf::Event *event, State *state)
 
         if (event->key.code == sf::Keyboard::Escape) _grid->resetAllValues();
 
-        if (event->key.code == sf::Keyboard::E) _grid->loadGrid("../assets/grids/easy.txt");
-        if (event->key.code == sf::Keyboard::M) _grid->loadGrid("../assets/grids/multiple.txt");
-        if (event->key.code == sf::Keyboard::H) _grid->loadGrid("../assets/grids/hard.txt");
+        if (event->key.code == sf::Keyboard::E) _grid->loadEasyGrid();
+        if (event->key.code == sf::Keyboard::M) _grid->loadMultiSolutionsGrid();
+        if (event->key.code == sf::Keyboard::H) _grid->loadHardGrid();
 
         if (event->key.code == sf::Keyboard::Num1) _grid->setFixedValue(_iSelected, _jSelected, 1);
         if (event->key.code == sf::Keyboard::Num2) _grid->setFixedValue(_iSelected, _jSelected, 2);

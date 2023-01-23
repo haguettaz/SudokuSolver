@@ -11,19 +11,26 @@ Grid::Grid()
     if (!_font.loadFromFile("../assets/fonts/cmunss.ttf"))
         cout << "Error while loading font" << endl;
 
+    _gridShape.setFillColor(sf::Color::Transparent);
+    _gridShape.setOutlineColor(sf::Color::Black);
+    _gridShape.setOutlineThickness(10);
+    _gridShape.setSize(sf::Vector2f(9*_cellSize, 9*_cellSize));
+
+    _view = sf::View(sf::FloatRect(-_cellSize, -_cellSize, 11*_cellSize, 11*_cellSize));
+
     for (int i=0; i<9; i++)
     {
         for (int j=0; j<9; j++)
         {
-            _cellsShape[i][j].setSize(sf::Vector2f(100, 100));
+            _cellsShape[i][j].setSize(sf::Vector2f(_cellSize, _cellSize));
             _cellsShape[i][j].setFillColor(sf::Color::Transparent);
             _cellsShape[i][j].setOutlineColor(sf::Color::Black);
-            _cellsShape[i][j].setOutlineThickness(3);
-            _cellsShape[i][j].setOrigin(50, 50);
-            _cellsShape[i][j].setPosition(j*100 + 350, i*100 + 350);
+            _cellsShape[i][j].setOutlineThickness(2);
+            _cellsShape[i][j].setOrigin(_cellSize/2, _cellSize/2);
+            _cellsShape[i][j].setPosition((j+0.5)*_cellSize, (i+0.5)*_cellSize);
 
             _cellsText[i][j].setFont(_font);
-            _cellsText[i][j].setCharacterSize(100);
+            _cellsText[i][j].setCharacterSize(_cellSize);
         }
     }
 
@@ -34,18 +41,11 @@ Grid::Grid()
             _blocksShape[i][j].setFillColor(sf::Color::Transparent);
             _blocksShape[i][j].setOutlineColor(sf::Color::Black);
             _blocksShape[i][j].setOutlineThickness(5);
-            _blocksShape[i][j].setSize(sf::Vector2f(300, 300));
-            _blocksShape[i][j].setOrigin(150, 150);
-            _blocksShape[i][j].setPosition(sf::Vector2f(300 * j + 450, 300 * i + 450));
+            _blocksShape[i][j].setSize(sf::Vector2f(3*_cellSize, 3*_cellSize));
+            _blocksShape[i][j].setOrigin((3*_cellSize)/2, (3*_cellSize)/2);
+            _blocksShape[i][j].setPosition(sf::Vector2f((3*j+1.5)*_cellSize, (3*i+1.5)*_cellSize));
         }
     }
-
-    _gridShape.setFillColor(sf::Color::Transparent);
-    _gridShape.setOutlineColor(sf::Color::Black);
-    _gridShape.setOutlineThickness(10);
-    _gridShape.setSize(sf::Vector2f(900, 900));
-    _gridShape.setOrigin(450, 450);
-    _gridShape.setPosition(sf::Vector2f(750, 750));
 }
 
 void Grid::setCellColor(int i, int j, sf::Color color)
@@ -92,30 +92,77 @@ void Grid::resetAllValues()
     }
 }
 
-void Grid::loadGrid(string filename)
+void Grid::loadEasyGrid()
 {
     resetAllValues();
 
-    ifstream infile(filename);
+    int tmp[9][9] = {
+        {0,5,0,0,0,0,0,7,0},
+        {7,0,6,0,1,0,0,2,9},
+        {9,0,0,0,0,4,0,6,0},
+        {0,2,0,3,0,0,0,0,0},
+        {0,1,0,0,6,0,0,0,0},
+        {5,0,0,0,0,7,0,1,3},
+        {0,0,0,9,4,0,0,0,0},
+        {3,0,9,0,2,8,7,0,5},
+        {0,4,0,5,7,0,0,0,6},
+        };
 
-    if (!infile.is_open())
-    {
-        cout << "Error while loading grid" << endl;
-        return;
-    }
-
-    char c;
     for (int i=0; i<9; i++)
     {
         for (int j=0; j<9; j++)
         {
-            do
-            {
-                infile.get(c);
-            } while (c == ' ' || c == '|' || c == '-' || c == '\n');
-            
-            if (c == '.') continue;
-            _fixedValues[i][j] = (int) c - '0';
+            _fixedValues[i][j] = tmp[i][j];
+        }
+    }
+}
+
+void Grid::loadMultiSolutionsGrid()
+{
+    resetAllValues();
+    
+    int tmp[9][9] = {
+        {0,0,0,2,0,0,8,0,0},
+        {1,0,0,9,0,0,0,0,0},
+        {0,3,0,0,7,0,6,0,0},
+        {4,0,0,0,0,6,1,0,0},
+        {3,0,0,7,0,0,0,9,0},
+        {0,0,0,0,0,0,0,0,0},
+        {0,0,4,0,2,0,0,1,0},
+        {7,0,0,0,0,0,0,5,0},
+        {0,2,8,0,0,0,0,0,0},
+        };
+
+    for (int i=0; i<9; i++)
+    {
+        for (int j=0; j<9; j++)
+        {
+            _fixedValues[i][j] = tmp[i][j];
+        }
+    }
+}
+
+void Grid::loadHardGrid()
+{
+    resetAllValues();
+    
+    int tmp[9][9] = {
+        {8,0,0,0,0,0,0,0,0},
+        {0,0,3,6,0,0,0,0,0},
+        {0,7,0,0,9,0,2,0,0},
+        {0,5,0,0,0,7,0,0,0},
+        {0,0,0,0,4,5,7,0,0},
+        {0,0,0,1,0,0,0,3,0},
+        {0,0,1,0,0,0,0,6,8},
+        {0,0,8,5,0,0,0,1,0},
+        {0,9,0,0,0,0,4,0,0},
+        };
+
+    for (int i=0; i<9; i++)
+    {
+        for (int j=0; j<9; j++)
+        {
+            _fixedValues[i][j] = tmp[i][j];
         }
     }
 }
@@ -205,4 +252,6 @@ void Grid::draw(sf::RenderWindow *window)
             window->draw(_cellsText[i][j]);
         }
     }
+
+    window->setView(_view);
 }

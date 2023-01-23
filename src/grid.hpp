@@ -15,15 +15,11 @@ public:
     void update(State *state);
     void draw(sf::RenderWindow *window);
 
-    // int checkFixedRow(int i);
-    // int checkFixedColumn(int j);
-    // int checkFixedBlock(int i, int j);
-
-    void loadGrid(std::string filename);
+    void loadEasyGrid();
+    void loadMultiSolutionsGrid();
+    void loadHardGrid();
 
     void setCellColor(int i, int j, sf::Color color);
-    // void setColumnColor(int j, sf::Color color);
-    // void setBlockColor(int i, int j, sf::Color color);
 
     int getFixedValue(int i, int j);
     int getSolvedValue(int i, int j);
@@ -36,14 +32,14 @@ public:
     void resetAllValues();
 
 private:
-    sf::Font _font;
+    int _cellSize = 100;
 
+    sf::View _view;
+    sf::Font _font;
     sf::Text _cellsText[9][9];
     sf::RectangleShape _cellsShape[9][9];
     sf::RectangleShape _blocksShape[3][3];
     sf::RectangleShape _gridShape;
-    // sf::RectangleShape _rows[9];
-    // sf::RectangleShape _columns[9];
 
     int _fixedValues[9][9] = {0};
     int _solvedValues[9][9] = {0};
